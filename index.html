@@ -6,12 +6,13 @@
     <title>Hệ Thống Quản Lý Phòng Khám Tư Nhân</title>
     
 	<style>
-	/* Mặc định sẽ ẩn tất cả các phần nội dung */
-.page-section { 
+	    /* Mặc định sẽ ẩn tất cả các phần nội dung */
+        .page-section { 
     display: none; 
 }
-/* Chỉ hiển thị phần nội dung nào được gắn class 'active' */
-.page-section.active { 
+
+        /* Chỉ hiển thị phần nội dung nào được gắn class 'active' */
+    .page-section.active { 
     display: block; 
 }
         /* CSS cơ bản để định hình bố cục Dashboard */
@@ -524,7 +525,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+//const analytics = getAnalytics(app);
 
     // ==========================================
     // CHỨC NĂNG 1: ĐỌC DỮ LIỆU TỪ FIREBASE (REAL-TIME)
