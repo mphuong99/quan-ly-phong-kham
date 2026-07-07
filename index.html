@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hệ Thống Quản Lý Phòng Khám Tư Nhân</title>
-    <style>
+    /* Mặc định sẽ ẩn tất cả các phần nội dung */
+.page-section { 
+    display: none; 
+}
+/* Chỉ hiển thị phần nội dung nào được gắn class 'active' */
+.page-section.active { 
+    display: block; 
+}
+	<style>
         /* CSS cơ bản để định hình bố cục Dashboard */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
         body { display: flex; height: 100vh; background-color: #f4f7f6; }
@@ -56,6 +64,8 @@
     </div>
 
     <div class="main-content">
+	<div id="trang-chu" class="page-section active">
+        </div>
 	    <div class="header">
     <h1>HỆ THỐNG QUẢN LÝ PHÒNG KHÁM TƯ NHÂN</h1>
     <div>
@@ -97,6 +107,8 @@
     <p>- Email: nhom2@gmail.com</p>
 </div>
 	<div class="main-content">
+	<div id="benh-nhan" class="page-section">
+        </div>
         <div class="header">
             <h1>THÔNG TIN BỆNH NHÂN</h1>
             <div>
@@ -193,6 +205,8 @@
         </div>
     </div>
     <div class="main-content">
+	<div id="bac-si" class="page-section">
+        </div>
 	    <div class="header">
     <h1>THÔNG TIN BÁC SĨ</h1>
 </div>
@@ -244,6 +258,8 @@
     </form>
     </div>
 	<div class="main-content">
+	<div id="kho-thuoc" class="page-section">
+        </div>
 	    <div class="header">
     <h1>QUẢN LÝ KHO THUỐC</h1>
 </div>
@@ -292,6 +308,8 @@
     </form>
     </div>
 	<div class="main-content">
+	<div id="lich-kham" class="page-section">
+        </div>
 	    <div class="header">
     <h1>LỊCH HẸN</h1>
 </div>
@@ -357,6 +375,8 @@
     </form>
     </div>
 	<div class="main-content">
+	<div id="hoa-don" class="page-section">
+        </div>
 	<div class="header">
     <h1>HÓA ĐƠN KHÁM BỆNH</h1>
 </div>
@@ -428,6 +448,8 @@
     </div>
     </div>
     <div class="main-content">
+	<div id="bao-cao" class="page-section">
+        </div>
 	    <div class="header">
     <h1>BÁO CÁO DOANH THU THEO THÁNG</h1>
 </div>
@@ -482,8 +504,8 @@
 <script type="module">
     // 1. Nhập các công cụ cần thiết từ Firebase (bổ sung thêm onSnapshot)
     // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -579,6 +601,36 @@ const analytics = getAnalytics(app);
             console.error("Lỗi khi thêm: ", e);
             alert("Có lỗi xảy ra, vui lòng kiểm tra lại console!");
         }
+    });
+</script>
+<script>
+    // 1. Lấy danh sách tất cả các nút trên thanh menu bên trái
+    const menuLinks = document.querySelectorAll('.sidebar a');
+    
+    // 2. Lấy danh sách tất cả các "gói" nội dung chức năng
+    const sections = document.querySelectorAll('.page-section');
+
+    // 3. Lắng nghe hành động click chuột vào menu
+    menuLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault(); // Ngăn chặn trình duyệt tải lại trang
+
+            // Xóa hiệu ứng đang chọn (active) ở tất cả các nút menu và các trang
+            menuLinks.forEach(item => item.classList.remove('active'));
+            sections.forEach(sec => sec.classList.remove('active'));
+
+            // Thêm màu nền đang chọn (active) vào nút vừa bấm
+            this.classList.add('active');
+
+            // Lấy ID từ href (Ví dụ: từ '#bac-si' lấy ra 'bac-si')
+            const targetId = this.getAttribute('href').substring(1);
+            
+            // Tìm trang có ID tương ứng và cho hiển thị lên
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+        });
     });
 </script>
 </body>
