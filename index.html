@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Quản Lý Phòng Khám Tư Nhân</title>
+    <style>
+        /* CSS cơ bản để định hình bố cục Dashboard */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { display: flex; height: 100vh; background-color: #f4f7f6; }
+        
+        /* Menu điều hướng bên trái */
+        .sidebar { width: 250px; background-color: #2c3e50; color: white; display: flex; flex-direction: column; }
+        .sidebar h2 { padding: 20px; text-align: center; background-color: #1abc9c; font-size: 18px; }
+        .sidebar a { padding: 15px 20px; color: white; text-decoration: none; border-bottom: 1px solid #34495e; display: block; }
+        .sidebar a:hover, .sidebar a.active { background-color: #34495e; border-left: 5px solid #1abc9c; }
+        
+        /* Khu vực nội dung chính */
+        .main-content { flex: 1; padding: 20px; overflow-y: auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #ddd; }
+        
+        /* Khung chứa nội dung Form và Bảng */
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .form-group { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
+        .form-control { flex: 1; min-width: 200px; display: flex; flex-direction: column; }
+        .form-control label { margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+        .form-control input, .form-control select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        
+        .btn-group { display: flex; gap: 10px; }
+        .btn { padding: 10px 15px; border: none; border-radius: 4px; color: white; cursor: pointer; font-weight: bold; }
+        .btn-add { background-color: #3498db; }
+        .btn-edit { background-color: #f39c12; }
+        .btn-delete { background-color: #e74c3c; }
+        .btn-search { background-color: #2ecc71; }
+        
+        /* Bảng dữ liệu */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        table th, table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        table th { background-color: #2c3e50; color: white; }
+        table tr:nth-child(even) { background-color: #f9f9f9; }
+        table tr:hover { background-color: #f1f1f1; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>PHÒNG KHÁM TƯ NHÂN</h2>
+        <a href="#trang-chu">🏠 Trang chủ</a>
+        <a href="#benh-nhan" class="active">👥 Quản lý Bệnh nhân</a>
+        <a href="#bac-si" class="active">👨‍⚕️ Quản lý Bác sĩ</a>
+        <a href="#lich-kham" class="active">📅 Quản lý Lịch khám</a>
+        <a href="#kham-benh" class="active">🩺 Quản lý Khám bệnh</a>
+        <a href="#kho-thuoc" class="active">💊 Quản lý Thuốc</a>
+        <a href="#hoa-don" class="active">🧾 Quản lý Hóa đơn</a>
+        <a href="#bao-cao" class="active">📊 Báo cáo - Thống kê</a>
+    </div>
+
+    <div class="main-content">
+	    <div class="header">
+    <h1>HỆ THỐNG QUẢN LÝ PHÒNG KHÁM TƯ NHÂN</h1>
+    <div>
+        <span>Xin chào, <strong>Admin01</strong></span>
+        <a href="login.html" style="text-decoration: none;">
+            <button class="btn" style="background-color: #e74c3c; color: white; margin-left: 15px;">Đăng xuất</button>
+        </a>
+    </div>
+</div>
+
+<div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
+    
+    <div style="flex: 1; min-width: 250px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <h3 style="background-color: #f39c12; color: white; padding: 10px; text-align: center; border-radius: 4px; margin-bottom: 20px;">QUẢN LÝ THÔNG TIN</h3>
+        <button class="btn" style="width: 100%; margin-bottom: 15px; background-color: #e0f7fa; color: #006064; font-size: 16px; padding: 15px;">Thông tin bệnh nhân</button>
+        <button class="btn" style="width: 100%; margin-bottom: 15px; background-color: #e0f7fa; color: #006064; font-size: 16px; padding: 15px;">Thông tin bác sĩ</button>
+        <button class="btn" style="width: 100%; background-color: #e0f7fa; color: #006064; font-size: 16px; padding: 15px;">Quản lý kho thuốc</button>
+    </div>
+
+    <div style="flex: 1; min-width: 250px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <h3 style="background-color: #e67e22; color: white; padding: 10px; text-align: center; border-radius: 4px; margin-bottom: 20px;">KHÁM VÀ HẸN</h3>
+        <button class="btn" style="width: 100%; margin-bottom: 15px; background-color: #e0f7fa; color: #006064; font-size: 16px; padding: 15px;">Lịch hẹn</button>
+        <button class="btn" style="width: 100%; background-color: #e0f7fa; color: #006064; font-size: 16px; padding: 15px;">Khám bệnh chi tiết</button>
+    </div>
+
+    <div style="flex: 1; min-width: 300px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <h3 style="background-color: #d35400; color: white; padding: 10px; text-align: center; border-radius: 4px; margin-bottom: 20px;">HÓA ĐƠN & BÁO CÁO</h3>
+        <button class="btn" style="width: 100%; margin-bottom: 15px; background-color: #e0f7fa; color: #006064; font-size: 16px; padding: 15px;">Hóa đơn</button>
+        <button class="btn" style="width: 100%; margin-bottom: 15px; background-color: #e0f7fa; color: #006064; font-size: 16px; padding: 15px;">Danh sách bệnh nhân theo BS</button>
+        <button class="btn" style="width: 100%; margin-bottom: 15px; background-color: #e0f7fa; color: #006064; font-size: 16px; padding: 15px;">Báo cáo doanh thu theo tháng</button>
+        <button class="btn" style="width: 100%; background-color: #e0f7fa; color: #006064; font-size: 16px; padding: 15px;">Thống kê tổng thuốc</button>
+    </div>
+</div>
+
+<div style="margin-top: 30px; text-align: right; color: #7f8c8d; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p><strong>Thông tin liên hệ:</strong></p>
+    <p>- Địa chỉ: Khu đô thị Nam An Khánh, Hoài Đức, Hà Nội</p>
+    <p>- Số điện thoại: 0123456789</p>
+    <p>- Email: nhom2@gmail.com</p>
+</div>
+	<div class="main-content">
+        <div class="header">
+            <h1>THÔNG TIN BỆNH NHÂN</h1>
+            <div>
+                <span>Xin chào, <strong>Admin01</strong></span>
+                <button class="btn btn-delete" style="margin-left: 15px;">Đăng xuất</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Nhập / Cập nhật thông tin</h3>
+            <br>
+            <form action="#" method="POST">
+                <div class="form-group">
+                    <div class="form-control">
+                        <label for="maBN">Mã bệnh nhân:</label>
+                        <input type="text" id="maBN" name="maBN" placeholder="VD: BN001" required>
+                    </div>
+                    <div class="form-control">
+                        <label for="hoTen">Họ tên:</label>
+                        <input type="text" id="hoTen" name="hoTen" placeholder="Nhập họ và tên" required>
+                    </div>
+                    <div class="form-control">
+                        <label for="gioiTinh">Giới tính:</label>
+                        <select id="gioiTinh" name="gioiTinh">
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-control">
+                        <label for="ngaySinh">Ngày sinh:</label>
+                        <input type="date" id="ngaySinh" name="ngaySinh">
+                    </div>
+                    <div class="form-control">
+                        <label for="sdt">Số điện thoại:</label>
+                        <input type="tel" id="sdt" name="sdt" placeholder="Nhập số điện thoại">
+                    </div>
+                    <div class="form-control">
+                        <label for="diaChi">Địa chỉ:</label>
+                        <input type="text" id="diaChi" name="diaChi" placeholder="Nhập địa chỉ liên lạc">
+                    </div>
+                </div>
+                
+                <div class="btn-group">
+                    <button type="button" class="btn btn-add">Thêm mới</button>
+                    <button type="button" class="btn btn-edit">Cập nhật</button>
+                    <button type="button" class="btn btn-delete">Xóa hồ sơ</button>
+                    <button type="button" class="btn btn-search">Tìm kiếm</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>Danh sách Bệnh nhân</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã bệnh nhân</th>
+                        <th>Họ tên</th>
+                        <th>Giới tính</th>
+                        <th>Ngày sinh</th>
+                        <th>Số điện thoại</th>
+                        <th>Địa chỉ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>BN001</td>
+                        <td>Nguyễn Văn A</td>
+                        <td>Nam</td>
+                        <td>09/06/1990</td>
+                        <td>0911111111</td>
+                        <td>Hà Nội</td>
+                    </tr>
+                    <tr>
+                        <td>BN002</td>
+                        <td>Trần Thị B</td>
+                        <td>Nữ</td>
+                        <td>08/06/1988</td>
+                        <td>0922222222</td>
+                        <td>Hải Phòng</td>
+                    </tr>
+                    <tr>
+                        <td>BN003</td>
+                        <td>Lê Minh C</td>
+                        <td>Nam</td>
+                        <td>15/03/1995</td>
+                        <td>0933333333</td>
+                        <td>Đà Nẵng</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="main-content">
+	    <div class="header">
+    <h1>THÔNG TIN BÁC SĨ</h1>
+</div>
+
+<div class="card">
+    <form action="#" method="POST">
+        <div class="form-group" style="align-items: center; justify-content: space-between;">
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <label for="timKiemBS"><strong>Tìm kiếm:</strong></label>
+                <input type="text" id="timKiemBS" placeholder="Nhập mã hoặc tên..." style="padding: 8px; width: 250px;">
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-add">Thêm</button>
+                <button type="button" class="btn btn-delete">Xóa</button>
+                <button type="button" class="btn btn-search">In</button>
+            </div>
+        </div>
+        
+        <table style="margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th>Mã bác sĩ</th>
+                    <th>Họ tên</th>
+                    <th>Chuyên khoa</th>
+                    <th>Số điện thoại</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" placeholder="Mã BS..." style="width: 100%; border: none;"></td>
+                    <td><input type="text" placeholder="Họ tên..." style="width: 100%; border: none;"></td>
+                    <td><input type="text" placeholder="Chuyên khoa..." style="width: 100%; border: none;"></td>
+                    <td><input type="text" placeholder="SĐT..." style="width: 100%; border: none;"></td>
+                </tr>
+                <tr>
+                    <td>BS001</td>
+                    <td>Lê Quang Hùng</td>
+                    <td>Nội tổng quát</td>
+                    <td>0923456789</td>
+                </tr>
+                <tr>
+                    <td>BS002</td>
+                    <td>Trần Thị Hương</td>
+                    <td>Tai mũi họng</td>
+                    <td>0923456789</td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+    </div>
+	<div class="main-content">
+	    <div class="header">
+    <h1>QUẢN LÝ KHO THUỐC</h1>
+</div>
+
+<div class="card">
+    <form action="#" method="POST">
+        <div class="form-group" style="align-items: center; justify-content: space-between;">
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <label for="timKiemThuoc"><strong>Tìm kiếm:</strong></label>
+                <input type="text" id="timKiemThuoc" placeholder="Nhập tên thuốc..." style="padding: 8px; width: 250px;">
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-add">Thêm</button>
+                <button type="button" class="btn btn-delete">Xóa</button>
+                <button type="button" class="btn btn-search">In</button>
+            </div>
+        </div>
+        
+        <table style="margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th>Mã thuốc</th>
+                    <th>Tên thuốc</th>
+                    <th>Đơn vị</th>
+                    <th>Số lượng</th>
+                    <th>Giá thuốc</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>TH001</td>
+                    <td>Paracetamol 500mg</td>
+                    <td>Viên</td>
+                    <td>20</td>
+                    <td>1500</td>
+                </tr>
+                <tr>
+                    <td>TH004</td>
+                    <td>Oresol</td>
+                    <td>Gói</td>
+                    <td>41</td>
+                    <td>1200</td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+    </div>
+	<div class="main-content">
+	    <div class="header">
+    <h1>LỊCH HẸN</h1>
+</div>
+
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <form action="#" method="POST">
+        <div class="form-group">
+            <div class="form-control">
+                <label>Mã lịch hẹn:</label>
+                <input type="text" value="LH001" readonly style="background-color: #eee;">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-control">
+                <label>Họ tên bác sĩ:</label>
+                <input type="text" value="Lê Quang Hùng">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-control">
+                <label>Họ tên bệnh nhân:</label>
+                <input type="text" value="Nguyễn Văn A">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-control">
+                <label>SĐT bệnh nhân:</label>
+                <input type="text" value="0911111111">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-control">
+                <label>Ngày hẹn:</label>
+                <input type="date" value="2025-06-25">
+            </div>
+            <div class="form-control">
+                <label>Ca khám:</label>
+                <select>
+                    <option selected>Sáng</option>
+                    <option>Chiều</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-control">
+                <label>Lý do:</label>
+                <input type="text" value="Sốt cao">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-control">
+                <label>Trạng thái:</label>
+                <select>
+                    <option selected>Đã khám</option>
+                    <option>Chưa khám</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="btn-group" style="justify-content: flex-end; margin-top: 20px;">
+            <button type="button" class="btn btn-add">Cập nhật</button>
+        </div>
+    </form>
+    </div>
+	<div class="main-content">
+	<div class="header">
+    <h1>HÓA ĐƠN KHÁM BỆNH</h1>
+</div>
+
+<div class="card">
+    <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
+        <div style="flex: 1; min-width: 250px;">
+            <div class="form-group">
+                <div class="form-control">
+                    <label>Mã hóa đơn:</label>
+                    <input type="text" value="HD001" readonly style="background-color: #eee;">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-control">
+                    <label>Mã bệnh nhân:</label>
+                    <input type="text" value="BN001">
+                </div>
+            </div>
+        </div>
+        <div style="flex: 1; min-width: 250px;">
+            <div class="form-group">
+                <div class="form-control">
+                    <label>Họ tên bệnh nhân:</label>
+                    <input type="text" value="Nguyễn Văn A">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-control">
+                    <label>Ngày lập:</label>
+                    <input type="date" value="2026-06-25">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-control">
+                    <label>Trạng thái:</label>
+                    <input type="text" value="Đã thanh toán" style="color: green; font-weight: bold;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4>Chi tiết đơn thuốc / dịch vụ</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Mã đơn thuốc</th>
+                <th>Mã khám</th>
+                <th>Mã thuốc</th>
+                <th>Số lượng</th>
+                <th>Tổng tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>DT001</td>
+                <td>KH001</td>
+                <td>TH001</td>
+                <td>10</td>
+                <td>15000</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="btn-group" style="justify-content: flex-end; margin-top: 20px;">
+        <button type="button" class="btn btn-add">Thêm</button>
+        <button type="button" class="btn btn-delete">Xóa</button>
+        <button type="button" class="btn btn-search">In Hóa Đơn</button>
+    </div>
+    </div>
+    <div class="main-content">
+	    <div class="header">
+    <h1>BÁO CÁO DOANH THU THEO THÁNG</h1>
+</div>
+
+<div class="card" style="display: flex; gap: 40px; flex-wrap: wrap;">
+    <div style="flex: 1; min-width: 300px;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Thời gian</th>
+                    <th>Doanh thu (VNĐ)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>01/2026</td>
+                    <td>224,000</td>
+                </tr>
+                <tr>
+                    <td>02/2026</td>
+                    <td>143,500</td>
+                </tr>
+                <tr>
+                    <td>06/2026</td>
+                    <td>678,000</td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="margin-top: 20px; font-size: 16px;">
+            <strong>Tổng số tháng:</strong> <span style="display: inline-block; padding: 5px 15px; border: 1px solid #ccc;">3</span>
+        </div>
+    </div>
+    
+    <div style="flex: 1; min-width: 300px; text-align: center;">
+        <h3 style="margin-bottom: 20px; color: #7f8c8d;">Tổng doanh thu theo tháng</h3>
+        <div style="border-left: 2px solid #333; border-bottom: 2px solid #333; height: 200px; display: flex; align-items: flex-end; justify-content: space-around; padding-bottom: 5px;">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 50px; height: 50px; background-color: #2980b9;"></div>
+                <span style="font-size: 12px; margin-top: 5px;">01/2026</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 50px; height: 30px; background-color: #2980b9;"></div>
+                <span style="font-size: 12px; margin-top: 5px;">02/2026</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 50px; height: 130px; background-color: #2980b9;"></div>
+                <span style="font-size: 12px; margin-top: 5px;">06/2026</span>
+            </div>
+        </div>
+    </div>
+    </div>
+<script type="module">
+    // 1. Nhập các công cụ cần thiết từ Firebase (bổ sung thêm onSnapshot)
+    // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBIH3lODLtSlSFkCTbbvPg0d0o3J2fOWxU",
+  authDomain: "hethongphongkham-b83b5.firebaseapp.com",
+  projectId: "hethongphongkham-b83b5",
+  storageBucket: "hethongphongkham-b83b5.firebasestorage.app",
+  messagingSenderId: "995108486798",
+  appId: "1:995108486798:web:f6ef0913929fc2909953df",
+  measurementId: "G-NDBSYB9ERJ"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+    // ==========================================
+    // CHỨC NĂNG 1: ĐỌC DỮ LIỆU TỪ FIREBASE (REAL-TIME)
+    // ==========================================
+    const tbody = document.querySelector("table tbody");
+
+    // Lắng nghe liên tục mọi thay đổi trong bảng "BENHNHAN"
+    onSnapshot(collection(db, "BENHNHAN"), (snapshot) => {
+        // Xóa sạch dữ liệu mẫu (hoặc dữ liệu cũ) đang có trên HTML
+        tbody.innerHTML = "";
+
+        // Duyệt qua từng bệnh nhân lấy được từ Firebase
+        snapshot.forEach((doc) => {
+            const data = doc.data(); // Trích xuất nội dung
+            
+            // Tạo một hàng <tr> mới
+            const tr = document.createElement("tr");
+            
+            // Đổ dữ liệu vào các cột <td>
+            tr.innerHTML = `
+                <td>${data.maBN || ""}</td>
+                <td>${data.hoTen || ""}</td>
+                <td>${data.gioiTinh || ""}</td>
+                <td>${data.ngaySinh || ""}</td>
+                <td>${data.sdt || ""}</td>
+                <td>${data.diaChi || ""}</td>
+            `;
+            
+            // Gắn hàng mới này vào phần thân bảng <tbody>
+            tbody.appendChild(tr);
+        });
+    });
+
+    // ==========================================
+    // CHỨC NĂNG 2: THÊM DỮ LIỆU LÊN FIREBASE
+    // ==========================================
+    document.querySelector('.btn-add').addEventListener('click', async () => {
+        // Lấy dữ liệu từ Form
+        const maBN = document.getElementById('maBN').value;
+        const hoTen = document.getElementById('hoTen').value;
+        const gioiTinh = document.getElementById('gioiTinh').value;
+        const ngaySinh = document.getElementById('ngaySinh').value;
+        const sdt = document.getElementById('sdt').value;
+        const diaChi = document.getElementById('diaChi').value;
+
+        // Bắt lỗi nếu để trống
+        if(!maBN || !hoTen) {
+            alert("Vui lòng nhập Mã bệnh nhân và Họ tên!");
+            return;
+        }
+
+        try {
+            // Đẩy lên Firebase
+            await addDoc(collection(db, "BENHNHAN"), {
+                maBN: maBN,
+                hoTen: hoTen,
+                gioiTinh: gioiTinh,
+                ngaySinh: ngaySinh,
+                sdt: sdt,
+                diaChi: diaChi
+            });
+            
+            // Xóa rỗng các ô nhập liệu sau khi thêm xong
+            document.getElementById('maBN').value = '';
+            document.getElementById('hoTen').value = '';
+            document.getElementById('ngaySinh').value = '';
+            document.getElementById('sdt').value = '';
+            document.getElementById('diaChi').value = '';
+            
+            alert("Đã thêm bệnh nhân thành công!");
+            
+            // Lưu ý: Không cần viết code cập nhật bảng ở đây, vì hàm onSnapshot ở trên 
+            // sẽ tự động nhận diện có dữ liệu mới và tự vẽ lại bảng!
+        } catch (e) {
+            console.error("Lỗi khi thêm: ", e);
+            alert("Có lỗi xảy ra, vui lòng kiểm tra lại console!");
+        }
+    });
+</script>
+</body>
+</html>
